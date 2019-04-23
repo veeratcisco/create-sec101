@@ -4,7 +4,7 @@ apiKey =
 
 [ISE]
 userName= ersadmin
-passWord= 
+passWord=
 hostName= 198.18.133.27:9060
 
 [ThreatGrid]
@@ -13,11 +13,12 @@ hostName = panacea.threatgrid.com/api/v2
 
 [FDM]
 userName = admin
-passWord = 
+passWord =
 hostName = https://198.18.133.8
 
 [Enforcement]
 apiKey = 
+
 
 
 [Investigate]
