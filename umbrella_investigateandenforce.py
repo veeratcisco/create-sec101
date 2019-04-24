@@ -7,7 +7,6 @@ import configparser
 
 def is_valid_ipv4_address(address):
     try:
-        print("Veer")
         socket.inet_pton(socket.AF_INET, address)
     except AttributeError:  # no inet_pton here, sorry
         try:
@@ -20,7 +19,7 @@ def is_valid_ipv4_address(address):
         return False
     return True
 
-
+time = datetime.now().isoformat()
 # Read the config file to get settings
 configFile = 'api.cfg'
 config = configparser.ConfigParser()
@@ -47,8 +46,7 @@ headers = {
     'limit': '1'
 }
 
-print(url_post)
-
+#print(url_post)
 
 def get_domain_disposition(get_url, domain):
     print(get_url)
@@ -58,16 +56,13 @@ def get_domain_disposition(get_url, domain):
         domainOutput = output[domain]
         domainStatus = domainOutput["status"]
         if (domainStatus == -1):
-            print("SUCCESS: The domain %(domain)s is found MALICIOUS at %(time)s" %
-                  {'domain': domain, 'time': time})
+            print(f"Domain : {domain} is BAD!!\n\n")
             return "bad"
         elif (domainStatus == 1):
-            print("SUCCESS: The domain %(domain)s is found CLEAN at %(time)s" %
-                  {'domain': domain, 'time': time})
+            print(f"Domain: {domain} is Clean!\n\n")
             return "clean"
         elif (domainStatus == 0):
-            print("SUCCESS: The domain %(domain)s is found UNDEFINED / RISKY at %(time)s" %
-                  {'domain': domain, 'time': time})
+            print(f"Domain: {domain} is Risky!\n\n")
             return "risky"
     else:
         print(
@@ -83,8 +78,7 @@ def handle_domain_status():
             if line[0] == "#" or line.strip() == "Site":
                 pass
             else:
-                domain_list.append(line.strip())
-    time = datetime.now().isoformat()
+                domain_list.append(line.strip())            
     domain_list_r = []
     domin_filter_ip = []
     domain_final = []
@@ -92,16 +86,16 @@ def handle_domain_status():
         if i not in domain_list_r:
             domain_list_r.append(i)
     domain_filter_ip = domain_list_r
-    print(domain_filter_ip)
+    #print(domain_filter_ip)
     for whatip in domain_filter_ip:
         if is_valid_ipv4_address(whatip) == False:
             domain_final.append(whatip)
             domain_list = domain_final
-            print(domain_list)
+            #print(domain_list)
             # loop through all domains
-    print("We found dulicates and pruned the list :\n")
+    print("We found dulicates and we have pruned the list to remove the duplicates:\n")
     for domain in domain_list:
-        print(domain)
+        #print(domain)
         get_url = investigate_url + domain + "?showLabels"
         status = get_domain_disposition(get_url, domain)
         if status != "error":
@@ -131,10 +125,8 @@ def post_enforcement(domain):
     if (request_post.status_code == 202):
         print("\n")
         print(
-            "SUCCESS: The domain %(domain)s has an associated sample with Hash: %(hash)s and Threat Score: %(score)i at %(time)s" % {
-                'domain': domain, 'hash': hash_sample, 'score': score_sample, 'time': time})
+            f"SUCCESS: The domain {domain} is blocked")
         print("\n")
-    # error handling
     else:
         print(
             "An error has ocurred with the following code %(error)s, please consult the following link: https://docs.umbrella.com/investigate-api/" %

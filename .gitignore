@@ -1,4 +1,6 @@
 
+#block these
 api.cfg
 macaddr.txt
 sha.txt
+domainsipaddr.txt
